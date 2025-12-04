@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\FrontHomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+route::prefix('front')->name('front.')->group(function () {
+    route::get('/', FrontHomeController::class)->name('index');
+    route::view ('/login', 'front.auth.login')->name('login');
+    route::view ('/register', 'front.auth.register')->name('register');
+    route::view ('/forget-password', 'front.auth.forget-password')->name('forget-password');
+});
 
 Route::get('/', function () {
     return view('welcome');
