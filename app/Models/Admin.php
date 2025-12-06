@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\UpdatePasswordNotification;
-class User extends Authenticatable implements MustVerifyEmail
+class Admin extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -42,9 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new UpdatePasswordNotification($token));
-    }
+  
 }
 

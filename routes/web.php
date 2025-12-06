@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontHomeController;
+use App\Http\Controllers\Back\BackHomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,3 +24,11 @@ route::prefix('front')->name('front.')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+//admin routes
+route::prefix('back')->name('back.')->group(function () {
+    route::get('/', BackHomeController::class)->middleware('admin')->name('index');
+    route::view ('/login', 'back.auth.login')->name('login');
+    route::view ('/register', 'back.auth.register')->name('register');
+    route::view ('/forget-password', 'back.auth.forget-password')->name('forget-password');
+});
