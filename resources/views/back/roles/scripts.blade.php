@@ -1,6 +1,9 @@
-<script src="{{ asset('assets') }}/jquery-3.6.0.min.js"></script>
 <script>
-    $("document").ready(function(){
+    // This file is kept for backward compatibility but scripts are now in pushscripts.blade.php
+    // jQuery will be loaded after this, so we use window.onload
+    window.addEventListener('load', function() {
+        if (typeof jQuery !== 'undefined') {
+            jQuery(document).ready(function($){
         //============================================= LOADER
         var $loading = $('#loading').hide();
         $(document)
@@ -30,16 +33,22 @@
         });
 
         //============================================= AJAX REQUEST FOR ADDING RECORD
-        $(document).on('click', "#submit_add_form", function () {
+        $(document).on('click', "#submit_add_form", function (e) {
+            e.preventDefault();
             let theForm = $("#add_form");
-            let formAction = theForm[0].action;
-            let formMethod = theForm[0].method;
+            if (!theForm.length) {
+                console.error("Form not found");
+                return;
+            }
+            
+            let formAction = theForm.attr('action');
+            let formMethod = theForm.attr('method') || 'POST';
             let formData = new FormData($('#add_form')[0]);
 
             $.ajax({
-                url: formAction ,
-                method: formMethod ,
-                data: formData ,
+                url: formAction,
+                method: formMethod,
+                data: formData,
                 processData: false,
                 contentType: false,
                 headers: {
@@ -47,36 +56,58 @@
                 },
                 dataType: "json",
                 success: function(data){
-                    if (data['failed']) {
-                        $("#add_form_messages").empty().removeClass()
-                        .addClass('alert alert-danger').append(data['failed'])
-                        .get(0).scrollIntoView({ behavior: 'instant', block: 'center' });
-                    } else {
-                        $('#add_form').find('small').remove();
-                        $("#add_form_messages").empty().removeClass()
-                            .addClass('alert alert-success').append(data['success'])
+                    $('#add_form').find('small').remove();
+                    $("#add_form_messages").empty().removeClass();
+                    
+                    if (data && data['failed']) {
+                        $("#add_form_messages")
+                            .addClass('alert alert-danger')
+                            .append(data['failed'])
                             .get(0).scrollIntoView({ behavior: 'instant', block: 'center' });
-    
+                    } else if (data && data['success']) {
+                        $("#add_form_messages")
+                            .addClass('alert alert-success')
+                            .append(data['success'])
+                            .get(0).scrollIntoView({ behavior: 'instant', block: 'center' });
+        
                         setTimeout(function () {
-                            $(':input','#add_form')
-                            .not(':button, :submit, :reset, :hidden')
-                            .val('')
-                            .prop('checked', false)
-                            .prop('selected', false);
-                            $("#add_form_messages").empty().removeClass() ;
-                            $("#mainModal").modal('hide');
-                            $("#mainCont").load(" #mainCont > *");
+                            let rolesIndexUrl = "{{ route('back.roles.index') }}";
+                            window.location.href = rolesIndexUrl;
                         }, 1000);
                     }
                 },
-                error: function(xhr){
+                error: function(xhr, status, error){
+                    console.error("AJAX Error:", status, error);
+                    console.error("Response:", xhr.responseText);
+                    
                     $('#add_form').find('small').remove();
-                    $.each(xhr.responseJSON.errors, function( key, value ) {
-                        let el = $(document).find('[name="'+key+'"]').first();
-                        el.after($('<small class="text-danger">'+value[0]+'</small>'));
-                    });
+                    $("#add_form_messages").empty().removeClass();
+                    
+                    try {
+                        if (xhr && xhr.responseJSON && xhr.responseJSON.errors) {
+                            $.each(xhr.responseJSON.errors, function( key, value ) {
+                                let el = $('[name="'+key+'"]').first();
+                                if (el.length) {
+                                    el.after($('<small class="text-danger d-block">'+value[0]+'</small>'));
+                                }
+                            });
+                        } else if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                            $("#add_form_messages")
+                                .addClass('alert alert-danger')
+                                .append(xhr.responseJSON.message);
+                        } else {
+                            $("#add_form_messages")
+                                .addClass('alert alert-danger')
+                                .append('حدث خطأ. يرجى المحاولة مرة أخرى.');
+                        }
+                    } catch(e) {
+                        console.error("Error handling:", e);
+                        $("#add_form_messages")
+                            .addClass('alert alert-danger')
+                            .append('حدث خطأ. يرجى المحاولة مرة أخرى.');
+                    }
                 },
-            }) ; 
+            }); 
         });
 
         //============================================= AJAX REQUEST FOR SHOWING DELETE MODAL
@@ -102,7 +133,8 @@
                     $("#delete_alert_div").removeClass().addClass('alert alert-success').append(data['success']) ; 
                     
                     setTimeout(function(){
-                        $("#mainCont").load(" #mainCont > *");
+                        let rolesIndexUrl = "{{ route('back.roles.index') }}";
+                        $("#mainCont").load(rolesIndexUrl + " #mainCont > *");
                         $("#deleteModal").load(" #deleteModal > *");
                         $('#deleteModal').modal('toggle');
                     }, 1000);
@@ -132,16 +164,22 @@
         });
 
         //============================================= AJAX REQUEST FOR UPDATING
-        $(document).on('click', "#submit_edit_form", function () {
+        $(document).on('click', "#submit_edit_form", function (e) {
+            e.preventDefault();
             let theForm = $("#edit_form");
-            let formAction = theForm[0].action;
-            let formMethod = theForm[0].method;
+            if (!theForm.length) {
+                console.error("Edit form not found");
+                return;
+            }
+            
+            let formAction = theForm.attr('action');
+            let formMethod = theForm.attr('method') || 'POST';
             let formData = new FormData($('#edit_form')[0]);
 
             $.ajax({
-                url: formAction ,
-                method: formMethod ,
-                data: formData ,
+                url: formAction,
+                method: formMethod,
+                data: formData,
                 processData: false,
                 contentType: false,
                 headers: {
@@ -149,32 +187,60 @@
                 },
                 dataType: "json",
                 success: function(data){
-                    if (data['failed']) {
-                        $("#edit_form_messages").empty().removeClass()
-                        .addClass('alert alert-danger').append(data['failed'])
-                        .get(0).scrollIntoView({ behavior: 'instant', block: 'center' });
-                    } else {
-                        $('#edit_form').find('small').remove();
-                        $("#edit_form_messages").empty().removeClass()
-                            .addClass('alert alert-success').append(data['success'])
+                    $('#edit_form').find('small').remove();
+                    $("#edit_form_messages").empty().removeClass();
+                    
+                    if (data && data['failed']) {
+                        $("#edit_form_messages")
+                            .addClass('alert alert-danger')
+                            .append(data['failed'])
+                            .get(0).scrollIntoView({ behavior: 'instant', block: 'center' });
+                    } else if (data && data['success']) {
+                        $("#edit_form_messages")
+                            .addClass('alert alert-success')
+                            .append(data['success'])
                             .get(0).scrollIntoView({ behavior: 'instant', block: 'center' });
                         
                         setTimeout(function(){
-                            $("#mainCont").load(" #mainCont > *");
-                            $("#edit_form_messages").empty().removeClass() ;
+                            let rolesIndexUrl = "{{ route('back.roles.index') }}";
+                            $("#mainCont").load(rolesIndexUrl + " #mainCont > *");
+                            $("#edit_form_messages").empty().removeClass();
                             $("#mainModal").modal('hide');
                         }, 1000);
                     }
                 },
-                error: function(xhr){
+                error: function(xhr, status, error){
+                    console.error("AJAX Error:", status, error);
+                    console.error("Response:", xhr.responseText);
+                    
                     $('#edit_form').find('small').remove();
-                    $.each(xhr.responseJSON.errors, function( key, value ) {
-                        let el = $(document).find('[name="'+key+'"]').first();
-                        el.after($('<small class="text-danger">'+value[0]+'</small>'));
-                    });
+                    $("#edit_form_messages").empty().removeClass();
+                    
+                    try {
+                        if (xhr && xhr.responseJSON && xhr.responseJSON.errors) {
+                            $.each(xhr.responseJSON.errors, function( key, value ) {
+                                let el = $('[name="'+key+'"]').first();
+                                if (el.length) {
+                                    el.after($('<small class="text-danger d-block">'+value[0]+'</small>'));
+                                }
+                            });
+                        } else if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                            $("#edit_form_messages")
+                                .addClass('alert alert-danger')
+                                .append(xhr.responseJSON.message);
+                        } else {
+                            $("#edit_form_messages")
+                                .addClass('alert alert-danger')
+                                .append('حدث خطأ. يرجى المحاولة مرة أخرى.');
+                        }
+                    } catch(e) {
+                        console.error("Error handling:", e);
+                        $("#edit_form_messages")
+                            .addClass('alert alert-danger')
+                            .append('حدث خطأ. يرجى المحاولة مرة أخرى.');
+                    }
                 }
-            }) ; 
-    
+            }); 
         });
     
         //============================================= SCRIPT FOR DISPLAYING RECORD DETAILS ON MODAL
@@ -195,9 +261,11 @@
             }) ;
         });
 
-        //============================================= SCRIPT FOR DISPLAYING RECORD DETAILS ON MODAL
+        //============================================= SCRIPT FOR SELECT ALL CHECKBOXES
         $(document).on('click', "#selectAll", function () {
             $('input[name^=permissionArray]:checkbox').not(this).prop('checked', this.checked);
         });
+            });
+        }
     });
 </script>

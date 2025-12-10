@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PermissionGroup;
 use App\Http\Requests\RoleRequest;
 use Spatie\Permission\Models\Role;
-
+use Spatie\Permission\Models\Permission;
 class RoleController extends Controller
 {
     const DIRECTORY = 'back.roles';
@@ -45,8 +45,8 @@ class RoleController extends Controller
         $end     = $data['end'] ?? null;
         $word    = $data['word'] ?? null;
 
-        $data = Role::
-        when($word != null, function ($q) use ($word) {
+        $data = Role::where('guard_name', 'admin')
+        ->when($word != null, function ($q) use ($word) {
             $q->where('name', 'like', '%'.$word.'%');
         })
         ->when($start != null, function ($q) use ($start) {
@@ -68,7 +68,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $groups = PermissionGroup::with('permissions')->latest()->get();
+        $groups = Permission::where('guard_name', 'admin')->get();
         return view(self::DIRECTORY.".create", get_defined_vars())->with('directory', self::DIRECTORY);
     }
 
@@ -98,7 +98,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        $groups = PermissionGroup::with('permissions')->latest()->get();
+        $groups = Permission::where('guard_name', 'admin')->get();
         return view(self::DIRECTORY.".show", \get_defined_vars())->with('directory', self::DIRECTORY);
     }
 
@@ -110,7 +110,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $groups = PermissionGroup::with('permissions')->latest()->get();
+        $groups = Permission::where('guard_name', 'admin')->get();
         return view(self::DIRECTORY.".edit", \get_defined_vars())->with('directory', self::DIRECTORY);
     }
 

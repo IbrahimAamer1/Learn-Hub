@@ -45,6 +45,8 @@ data-assets-path="{{ asset('assets-back') }}/" data-template="vertical-menu-temp
     @include('back.modals.deleteModal')
 @include('back.partials.scripts')
 
+@stack('scripts')
+
 </body>
 
 </html>

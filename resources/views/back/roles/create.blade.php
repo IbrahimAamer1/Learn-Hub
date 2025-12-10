@@ -40,26 +40,26 @@
                     <div class="form-group col-12 mt-2">
                         <div class="row">
                             @if (count($groups) > 0)
-                                @foreach ($groups as $group)
+                                @foreach ($groups as $permission)
                                     <div class="col-md-6">
-                                        <label class="form-label">{{ __("lang.$group->value") }}</label>
-                                        @foreach ($group->permissions as $permission)
+                                        <label class="form-label">{{ __("lang.$permission->name") }}</label>
                                             <div class="form-check form-check-primary mt-1">
                                                 <input class="form-check-input" type="checkbox" name="permissionArray[{{ $permission->name }}]" id="formCheckcolor{{$permission->id}}">
                                                 <label class="form-check-label" for="formCheckcolor{{$permission->id}}">{{ __("lang.$permission->name") }}</label>
                                                 {{-- {{ permission_description($permission) }} --}}
                                             </div>
-                                        @endforeach
                                     </div>
                                 @endforeach
                             @endif
-                        </div>
+                        </div> 
                     </div>
             
                 </div>
                 {{-- MODIFICATIONS TO HERE --}}
             
-                <div class="form-group mt-3">
+                <hr class="text-muted">
+            
+                <div class="form-group mt-3 text-end">
                     <button type="button" class="btn btn-primary" id="submit_add_form">{{ __('lang.submit') }}</button>
                 </div>
             </form>
@@ -68,5 +68,4 @@
 
 @endsection
 
-@includeIf("$directory.scripts")
 @includeIf("$directory.pushScripts")

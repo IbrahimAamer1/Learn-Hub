@@ -34,9 +34,16 @@ if (!function_exists('permission')) {
                     return true;
                 }
             } catch (\Exception $e) {
-                // If permissions not set up yet, allow access for development
-                // Remove this in production
-                return true;
+                // Log the exception for debugging and deny access for security
+                \Illuminate\Support\Facades\Log::error('Permission helper check failed', [
+                    'user_id' => $user->id ?? null,
+                    'permission' => $permission,
+                    'exception' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                
+                // Deny access on any error to maintain security
+                return false;
             }
         }
 

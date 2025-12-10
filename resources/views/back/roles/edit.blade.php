@@ -43,16 +43,12 @@
                 <div class="form-group col-12">
                     <div class="row">
                         @if (count($groups) > 0)
-                            @foreach ($groups as $group)
+                            @foreach ($groups as $permission)
                                 <div class="col-md-6">
-                                    <label class="form-label">{{ __("lang.$group->value") }}</label>
-                                    @foreach ($group->permissions as $permission)
-                                        <div class="form-check form-check-primary mt-1">
-                                            <input class="form-check-input" type="checkbox" name="permissionArray[{{ $permission->name }}]" id="formCheckcolor{{$permission->id}}" @checked($role->hasPermissionTo($permission->name))>
-                                            <label class="form-check-label" for="formCheckcolor{{$permission->id}}">{{ __("lang.$permission->name") }}</label>
-                                            {{-- {{ permission_description($permission) }} --}}
-                                        </div>
-                                    @endforeach
+                                    <div class="form-check form-check-primary mt-1">
+                                        <input class="form-check-input" type="checkbox" name="permissionArray[{{ $permission->name }}]" id="formCheckcolor{{$permission->id}}" @checked($role->hasPermissionTo($permission->name))>
+                                        <label class="form-check-label" for="formCheckcolor{{$permission->id}}">{{ __("lang.$permission->name") }}</label>
+                                    </div>
                                 </div>
                             @endforeach
                         @endif
@@ -110,5 +106,4 @@
 
 @endsection
 
-@includeIf("$directory.scripts")
 @includeIf("$directory.pushScripts")

@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\AdminPasswordNotification;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Hash;
 class Admin extends Authenticatable implements MustVerifyEmail
 {
     use HasRoles;
@@ -47,6 +49,14 @@ class Admin extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new AdminPasswordNotification($token));
+    }
+
+
+    public function password() : Attribute
+    {
+        return Attribute::make(
+           set: fn ($value) => $value != null ? Hash::make($value) : $this->password,
+        );
     }
 }
 

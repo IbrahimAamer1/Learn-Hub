@@ -10,13 +10,7 @@
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h2 class="h5 page-title">{{ __('lang.roles') }}</h2>
 
-                <div class="page-title-right">
-                    @if (permission(['add_roles']))
-                    <a href="{{ route('back.roles.create') }}" class="btn btn-primary">
-                        {{ __('lang.add_new') }}
-                    </a>
-                    @endif
-                </div>
+                
             </div>
         </div>
     </div>
@@ -28,6 +22,13 @@
     <div class="card" id="mainCont">
         <div class="card-body">
 
+        <div class="page-title-right">
+                    {{-- @if (permission(['add_roles'])) --}}
+                    <a href="{{ route('back.roles.create') }}" class="btn btn-primary">
+                        {{ __('lang.add_new') }}
+                    </a>
+                    {{-- @endif --}}
+                </div>
             {{-- Table --}}
             <div class="table-responsive">
                 <table class="table align-middle table-nowrap font-size-14">
@@ -47,7 +48,7 @@
                                     <td>{{ $item->name }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 {{ __('lang.actions') }} <i class="mdi mdi-chevron-down"></i>
                                             </button>
                                             <div class="dropdown-menu">
@@ -57,19 +58,15 @@
                                                     {{ __('lang.show') }}
                                                 </a>
                                                 
-                                                @if (permission(['edit_roles']))
                                                 <a href="{{ route('back.roles.edit', ['role' => $item]) }}" class="dropdown-item">
                                                     <span class="bx bx-edit-alt"></span>
                                                     {{ __('lang.edit') }}
                                                 </a>
-                                                @endif
 
-                                                @if (permission(['delete_roles']))
-                                                <a class="dropdown-item deleteClass" href="{{ route('back.roles.destroy', ['role' => $item]) }}" data-title="{{ __('lang.delete_role') }}" data-toggle="modal" data-target="#deleteModal">
+                                                <a class="dropdown-item deleteClass" href="{{ route('back.roles.destroy', ['role' => $item]) }}" data-title="{{ __('lang.delete_role') }}">
                                                     <span class="bx bx-trash-alt"></span>
                                                     {{ __('lang.delete') }}
                                                 </a>
-                                                @endif
 
                                             </div>
                                         </div>
@@ -89,5 +86,4 @@
     </div>
 @endsection
 
-@includeIf("$directory.scripts")
 @includeIf("$directory.pushScripts")

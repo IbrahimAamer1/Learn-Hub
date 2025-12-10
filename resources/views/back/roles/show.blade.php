@@ -27,19 +27,25 @@
             <div class="form-group col-12">
                 <div class="row">
                     @if (count($groups) > 0)
-                        @foreach ($groups as $group)
+                        @foreach ($groups as $permission)
                             <div class="col-md-6">
-                                <label class="form-label">{{ __("lang.$group->value") }}</label>
-                                @foreach ($group->permissions as $permission)
                                 <div class="form-check form-check-primary mt-1">
                                     <input class="form-check-input" type="checkbox" 
                                     disabled @checked($role->hasPermissionTo($permission->name))>
                                     <div class="d-inline-block">
-                                        <label class="form-check-label">{{ __("lang.$permission->name") }}</label>
+                                        <label class="form-check-label">
+                                            @php
+                                                $transKey = "lang.$permission->name";
+                                                $translated = __($transKey);
+                                            @endphp
+                                            @if ($translated !== $transKey)
+                                                {{ $translated }}
+                                            @else
+                                                {{ ucfirst(str_replace('_', ' ', $permission->name)) }}
+                                            @endif
+                                        </label>
                                     </div>
-                                    {{-- {{ permission_description($permission) }} --}}
                                 </div>
-                                @endforeach
                             </div>
                         @endforeach
                     @endif
@@ -90,5 +96,4 @@
 
 @endsection
 
-@includeIf("$directory.scripts")
 @includeIf("$directory.pushScripts")

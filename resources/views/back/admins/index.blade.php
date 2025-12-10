@@ -41,17 +41,17 @@
 
                     <tbody>
                         @if (count($data['data']) > 0)
-                            @foreach ($data['data'] as $key => $item)
+                            @foreach ($data['data'] as $key => $admin)
                                 <tr>
                                     <td>{{ $data['data']->firstItem() + $loop->index }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->email }}</td>
+                                    <td>{{ $admin->name }}</td>
+                                    <td>{{ $admin->email }}</td>
                                     <td>
-                                        {{-- @if (count($item->getRoleNames()) > 0)
-                                            <span class="badge bg-warning text-white p-2">
-                                                {{ $item->getRoleNames()[0] ?? '' }}
+                                        @if (count($admin->getRoleNames()) > 0)
+                                            <span class="badge bg-dark text-white p-2">
+                                                {{ $admin->getRoleNames()[0] ?? '' }}
                                             </span>
-                                        @endif --}}
+                                        @endif
                                     </td>
                                     <td>
                                         <div class="btn-group">
@@ -61,7 +61,7 @@
                                             </button>
                                             <div class="dropdown-menu">
 
-                                                <a href="{{ route('back.admins.show', ['admin' => $item]) }}"
+                                                <a href="{{ route('back.admins.show', ['admin' => $admin]) }}"
                                                     class="dropdown-item displayClass"
                                                     data-title="{{ __('lang.show_admin') }}" data-bs-toggle="modal"
                                                     data-bs-target="#mainModal">
@@ -70,7 +70,7 @@
                                                 </a>
 
                                                 {{-- @if (permission(['edit_admins'])) --}}
-                                                <a href="{{ route('back.admins.edit', ['admin' => $item]) }}"
+                                                <a href="{{ route('back.admins.edit', ['admin' => $admin]) }}"
                                                     class="dropdown-item editClass"
                                                     data-title="{{ __('lang.edit_admin') }}" data-bs-toggle="modal"
                                                     data-bs-target="#mainModal">
@@ -81,9 +81,8 @@
 
                                                 {{-- @if (permission(['delete_admins'])) --}}
                                                 <a class="dropdown-item deleteClass"
-                                                    href="{{ route('back.admins.destroy', ['admin' => $item]) }}"
-                                                    data-title="{{ __('lang.delete_admin') }}" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal">
+                                                    href="{{ route('back.admins.destroy', ['admin' => $admin]) }}"
+                                                    data-title="{{ __('lang.delete_admin') }}">
                                                     <span class="bx bx-trash-alt"></span>
                                                     {{ __('lang.delete') }}
                                                 </a>
@@ -107,5 +106,4 @@
     </div>
 @endsection
 
-@includeIf("$directory.scripts")
 @includeIf("$directory.pushScripts")
