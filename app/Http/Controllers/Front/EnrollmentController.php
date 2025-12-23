@@ -31,7 +31,11 @@ class EnrollmentController extends Controller
 
     public function index()
     {
-        $enrollments = Enrollment::with(['course'])
+        $enrollments = Enrollment::with(['course' => function ($query) {
+            $query->with(['lessons' => function ($q) {
+                $q->published()->orderBy('lesson_order', 'asc');
+            }]);
+        }])
             ->where('user_id', Auth ::user()->id)
             ->orderBy('enrolled_at', 'desc')
             ->paginate(12);

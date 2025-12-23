@@ -48,9 +48,15 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-transparent">
-                                <a href="#" class="btn btn-primary btn-sm w-100">
-                                    {{ __('lang.continue_learning') ?? 'Continue Learning' }}
-                                </a>
+                                @php
+                                    $course = $enrollment->course;
+                                    $firstLesson = $course ? $course->getPublishedLessons()->first() : null;
+                                @endphp
+                                @if($firstLesson)
+                                    <a href="{{ route('front.lessons.show', [$course, $firstLesson]) }}" class="btn btn-primary btn-sm w-100">
+                                        <i class="bx bx-play-circle"></i> {{ __('lang.continue_learning') ?? 'Continue Learning' }}
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -69,7 +75,7 @@
                         <i class="bx bx-info-circle display-4"></i>
                         <h4 class="mt-3">{{ __('lang.no_enrollments') ?? 'No Enrollments' }}</h4>
                         <p>{{ __('lang.no_enrollments_message') ?? 'You are not enrolled in any courses yet.' }}</p>
-                        <a href="#" class="btn btn-primary">{{ __('lang.browse_courses') ?? 'Browse Courses' }}</a>
+                        <a href="{{ route('front.courses.index') }}" class="btn btn-primary">{{ __('lang.browse_courses') ?? 'Browse Courses' }}</a>
                     </div>
                 </div>
             </div>

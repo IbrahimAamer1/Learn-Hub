@@ -13,6 +13,7 @@ use App\Http\Controllers\Back\LessonController;
 use App\Http\Controllers\Back\EnrollmentController;
 use App\Http\Controllers\Front\EnrollmentController as FrontEnrollmentController;
 use App\Http\Controllers\Front\CourseController as FrontCourseController;
+use App\Http\Controllers\Front\LessonController as FrontLessonController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,11 +36,17 @@ route::prefix('front')->name('front.')->group(function () {
     route::get('courses', [FrontCourseController::class, 'index'])->name('courses.index');
     route::get('courses/{course}', [FrontCourseController::class, 'show'])->name('courses.show');
     
+    ##-----------------------------------lessons routes (public for free, authenticated for paid)-----------------------------------##
+    route::get('courses/{course}/lessons/{lesson}', [FrontLessonController::class, 'show'])->name('lessons.show');
+    
     ##-----------------------------------enrollments routes (students)-----------------------------------##
     route::middleware('auth')->group(function () {
         route::post('enrollments', [FrontEnrollmentController::class, 'store'])->name('enrollments.store');
         route::get('enrollments', [FrontEnrollmentController::class, 'index'])->name('enrollments.index');
         route::put('enrollments/{enrollment}', [FrontEnrollmentController::class, 'update'])->name('enrollments.update');
+        
+        // Mark lesson as watched (AJAX)
+        route::post('lessons/{lesson}/mark-watched', [FrontLessonController::class, 'markAsWatched'])->name('lessons.mark-watched');
     });
 });
 

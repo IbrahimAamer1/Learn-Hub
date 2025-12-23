@@ -183,6 +183,51 @@ class Course extends Model
         return $this->lessons()->where('is_published', true)->orderBy('lesson_order', 'asc')->get();
     }
 
+    /**
+     * Get the total count of published lessons in this course.
+     * 
+     * This method counts only published lessons (is_published = true).
+     * Used for calculating progress percentage.
+     * 
+     * @return int The total number of published lessons
+     */
+    public function getTotalPublishedLessons()
+    {
+        return $this->lessons()->where('is_published', true)->count();
+    }
+
+    /**
+     * Get the count of watched lessons by a specific user in this course.
+     * 
+     * This method counts how many lessons in this course have been watched
+     * by the given user. It uses the LessonProgress table to check
+     * which lessons have been marked as watched.
+     * 
+     * @param int|null $userId The user ID to check (null if not authenticated)
+     * @return int The number of watched lessons by the user
+     */
+    public function getWatchedLessonsCount($userId)
+    {
+        if (!$userId) {
+            return 0;
+        }
+
+        // Get all published lesson IDs in this course
+        $lessonIds = $this->lessons()
+            ->where('is_published', true)
+            ->pluck('id')
+            ->toArray();
+
+        if (empty($lessonIds)) {
+            return 0;
+        }
+
+        // Count how many of these lessons have been watched by the user
+        return \App\Models\LessonProgress::where('user_id', $userId)
+            ->whereIn('lesson_id', $lessonIds)
+            ->count();
+    }
+
 
 
 

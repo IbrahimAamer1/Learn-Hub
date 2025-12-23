@@ -179,5 +179,14 @@ return [
     'featured' => 'Featured',
     'apply_filters' => 'Apply Filters',
    'clear_filters' => 'Clear Filters',
+   'continue_learning' => 'Continue Learning',
+   'browse_courses' => 'Browse Courses',
+   'no_enrollments' => 'No Enrollments',
+   'no_enrollments_message' => 'You are not enrolled in any courses yet.',
+   'my_enrollments' => 'My Enrollments',
+   'enrolled' => 'Enrolled',
+   'completed' => 'Completed',
+   'cancelled' => 'Cancelled',
+   'course_progress' => 'Course Progress',
 ];
 

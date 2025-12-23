@@ -41,6 +41,11 @@ class Lesson extends Model
         return $this->belongsTo(Course::class);
     }
 
+    public function lessonProgresses()
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
     // slug options
     public function getSlugOptions(): SlugOptions
     {
@@ -73,5 +78,54 @@ class Lesson extends Model
     public function scopeByCourse($query, $courseId)
     {
         return $query->where('course_id', $courseId);
+    }
+
+    /////////////////////// METHODS ///////////////////////
+
+    /**
+     * Check if lesson is watched by a specific user.
+     * 
+     * This method checks if there's a LessonProgress record
+     * for the given user and this lesson, indicating the lesson was watched.
+     * 
+     * @param int|null $userId The user ID to check (null if not authenticated)
+     * @return bool True if lesson is watched by the user, false otherwise
+     */
+    public function isWatchedBy($userId)
+    {
+        if (!$userId) {
+            return false;
+        }
+
+        return $this->lessonProgresses()
+            ->where('user_id', $userId)
+            ->exists();
+    }
+
+    /**
+     * Check if a user can access this lesson.
+     * 
+     * This method determines access based on:
+     * - Free lessons: Available to everyone (return true)
+     * - Paid lessons: Only available if user is enrolled (via enrollment parameter)
+     * 
+     * @param int|null $userId The user ID to check (null if not authenticated)
+     * @param Enrollment|null $enrollment The enrollment record (if user is enrolled)
+     * @return bool True if user can access the lesson, false otherwise
+     */
+    public function canAccess($userId, $enrollment = null)
+    {
+        // Free lessons are available to everyone
+        if ($this->is_free) {
+            return true;
+        }
+
+        // Paid lessons require enrollment
+        if (!$userId || !$enrollment) {
+            return false;
+        }
+
+        // Check if enrollment is active (status = 'enrolled')
+        return $enrollment->status === 'enrolled';
     }
 }

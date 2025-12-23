@@ -71,8 +71,16 @@
                                 <div class="alert alert-success">
                                     <i class="bx bx-check-circle"></i> {{ __('lang.already_enrolled') ?? 'You are already enrolled in this course' }}
                                 </div>
-                                <a href="{{ route('front.enrollments.index') }}" class="btn btn-success w-100">
-                                    {{ __('lang.continue_learning') ?? 'Continue Learning' }}
+                                @php
+                                    $firstLesson = $course->lessons->where('is_published', true)->sortBy('lesson_order')->first();
+                                @endphp
+                                @if($firstLesson)
+                                    <a href="{{ route('front.lessons.show', [$course, $firstLesson]) }}" class="btn btn-success w-100 mb-2">
+                                        <i class="bx bx-play-circle"></i> {{ __('lang.start_learning') ?? 'Start Learning' }}
+                                    </a>
+                                @endif
+                                <a href="{{ route('front.enrollments.index') }}" class="btn btn-outline-success w-100">
+                                    {{ __('lang.my_enrollments') ?? 'My Enrollments' }}
                                 </a>
                             @else
                                 <button type="button" class="btn btn-primary w-100" id="enrollBtn" data-course-id="{{ $course->id }}">
@@ -115,10 +123,16 @@
                             <div class="list-group">
                                 @foreach($course->lessons as $lesson)
                                     <div class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center flex-grow-1">
                                             <span class="badge bg-label-secondary me-3">{{ $lesson->lesson_order }}</span>
-                                            <div>
-                                                <h6 class="mb-0">{{ $lesson->title }}</h6>
+                                            <div class="flex-grow-1">
+                                                @if($isEnrolled)
+                                                    <a href="{{ route('front.lessons.show', [$course, $lesson]) }}" class="text-decoration-none">
+                                                        <h6 class="mb-0 text-primary">{{ $lesson->title }}</h6>
+                                                    </a>
+                                                @else
+                                                    <h6 class="mb-0">{{ $lesson->title }}</h6>
+                                                @endif
                                                 @if($lesson->description)
                                                     <small class="text-muted">{{ Str::limit($lesson->description, 100) }}</small>
                                                 @endif
