@@ -14,6 +14,10 @@ use App\Http\Controllers\Back\EnrollmentController;
 use App\Http\Controllers\Front\EnrollmentController as FrontEnrollmentController;
 use App\Http\Controllers\Front\CourseController as FrontCourseController;
 use App\Http\Controllers\Front\LessonController as FrontLessonController;
+use App\Http\Controllers\Instructor\DashboardController;
+use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
+use App\Http\Controllers\Instructor\LessonController as InstructorLessonController;
+use App\Http\Controllers\Instructor\StudentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -83,5 +87,21 @@ route::prefix('back')->name('back.')->group(function () {
 
     
     require __DIR__.'/adminAuth.php';
+});
+
+//instructor routes
+Route::prefix('instructor')->name('instructor.')->middleware(['admin', 'instructor'])->group(function () {
+    // Dashboard
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Courses
+    Route::resource('courses', InstructorCourseController::class)->names('courses');
+    
+    // Lessons
+    Route::resource('lessons', InstructorLessonController::class)->names('lessons');
+    
+    // Students
+    Route::get('students', [StudentController::class, 'index'])->name('students.index');
+    Route::get('students/{user}/courses/{course}', [StudentController::class, 'show'])->name('students.show');
 });
 

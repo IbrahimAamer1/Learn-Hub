@@ -62,14 +62,6 @@
                 <div data-i18n="Students">My Students</div>
             </a>
         </li>
-
-        <!-- Analytics -->
-        <li class="menu-item @yield('analytics_active', '')">
-            <a href="{{ route('instructor.analytics.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-bar-chart"></i>
-                <div data-i18n="Analytics">Analytics</div>
-            </a>
-        </li>
     </ul>
 </aside>
 <!-- / Menu -->

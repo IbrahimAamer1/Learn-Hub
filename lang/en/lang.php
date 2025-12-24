@@ -188,5 +188,6 @@ return [
    'completed' => 'Completed',
    'cancelled' => 'Cancelled',
    'course_progress' => 'Course Progress',
+   'already_enrolled' => 'Already Enrolled',
 ];
 
