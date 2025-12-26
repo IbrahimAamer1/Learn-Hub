@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Category;
 use App\Models\Admin;
+use App\Models\User;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use Illuminate\Http\Request;
@@ -73,7 +74,7 @@ class CourseController extends Controller
     public function create()
     {
         $categories = Category::active()->get();
-        $instructors = Admin::all();
+        $instructors = User::where('type', 'instructor')->get();
         return view(self::DIRECTORY . ".create", get_defined_vars());
     }
 
@@ -97,7 +98,7 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $categories = Category::active()->get();
-        $instructors = Admin::all();
+        $instructors = User::where('type', 'instructor')->get();
         return view(self::DIRECTORY . ".edit", \get_defined_vars());
     }
 

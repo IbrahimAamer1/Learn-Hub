@@ -41,7 +41,7 @@ class Course extends Model
     // relationships
     public function instructor()
     {
-        return $this->belongsTo(Admin::class);
+        return $this->belongsTo(User::class, 'instructor_id');
     }
     public function category()
     {

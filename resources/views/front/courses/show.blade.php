@@ -68,9 +68,6 @@
                         <!-- Enroll Button -->
                         @auth
                             @if($isEnrolled)
-                                <div class="alert alert-success">
-                                    <i class="bx bx-check-circle"></i> {{ __('lang.already_enrolled') ?? 'You are already enrolled in this course' }}
-                                </div>
                                 @php
                                     $firstLesson = $course->lessons->where('is_published', true)->sortBy('lesson_order')->first();
                                 @endphp

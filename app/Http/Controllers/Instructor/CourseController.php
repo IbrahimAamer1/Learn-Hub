@@ -24,7 +24,7 @@ class CourseController extends Controller
      */
     private function verifyOwnership(Course $course)
     {
-        if ($course->instructor_id !== Auth::guard('admin')->id()) {
+        if ($course->instructor_id !== Auth::id()) {
             abort(403, 'You do not have permission to access this course');
         }
     }
@@ -39,7 +39,7 @@ class CourseController extends Controller
 
     public function getData($data)
     {
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $order = $data['order'] ?? 'sort_order';
         $sort = $data['sort'] ?? 'asc';
         $perpage = $data['perpage'] ?? 10;
@@ -88,8 +88,8 @@ class CourseController extends Controller
     {
         $data = $request->validated();
         
-        // Auto-set instructor_id to current admin
-        $data['instructor_id'] = Auth::guard('admin')->id();
+        // Auto-set instructor_id to current user
+        $data['instructor_id'] = Auth::id();
         
         if ($request->hasFile('image')) {
             $imagename = time() . '.' . $request->image->getClientOriginalName();

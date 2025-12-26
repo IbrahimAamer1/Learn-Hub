@@ -56,6 +56,24 @@
                   <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
+                <!-- User Type -->
+                <div class="mb-3">
+                  <label class="form-label">{{ __('lang.account_type') ?? 'Account Type' }} <span class="text-danger">*</span></label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="type" id="type_student" value="student" {{ old('type', 'student') === 'student' ? 'checked' : '' }} required>
+                    <label class="form-check-label" for="type_student">
+                      {{ __('lang.student') ?? 'Student' }}
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="type" id="type_instructor" value="instructor" {{ old('type') === 'instructor' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="type_instructor">
+                      {{ __('lang.instructor') ?? 'Instructor' }}
+                    </label>
+                  </div>
+                  <x-input-error :messages="$errors->get('type')" class="mt-2" />
+                </div>
+
                 <!-- Password -->
                 <div class="mb-3 form-password-toggle">
                   <label class="form-label" for="password">Password</label>

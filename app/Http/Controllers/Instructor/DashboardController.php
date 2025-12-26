@@ -29,15 +29,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $instructor = Auth::guard('admin')->user();
+        $instructor = Auth::user();
         
         // Get instructor's course IDs
-        $courseIds = $instructor->courses()->pluck('id');
+        $courseIds = $instructor->instructorCourses()->pluck('id');
 
         // Statistics
         $totalCourses = $instructor->getTotalCourses();
-        $publishedCourses = $instructor->courses()->where('status', 'published')->count();
-        $draftCourses = $instructor->courses()->where('status', 'draft')->count();
+        $publishedCourses = $instructor->instructorCourses()->where('status', 'published')->count();
+        $draftCourses = $instructor->instructorCourses()->where('status', 'draft')->count();
         $totalStudents = $instructor->getTotalStudents();
         $totalEnrollments = $instructor->getTotalEnrollments();
         $totalLessons = Lesson::whereIn('course_id', $courseIds)->count();
@@ -72,7 +72,7 @@ class DashboardController extends Controller
             ->get();
 
         // Recent courses (last 5)
-        $recentCourses = $instructor->courses()
+        $recentCourses = $instructor->instructorCourses()
             ->with(['category'])
             ->orderBy('created_at', 'desc')
             ->limit(5)

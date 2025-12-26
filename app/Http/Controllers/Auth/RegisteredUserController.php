@@ -35,18 +35,25 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'type' => ['required', 'in:student,instructor'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'type' => $request->type ?? 'student',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return to_route('front.index');
+        // Redirect based on user type
+        if ($user->type === 'instructor') {
+            return redirect()->route('instructor.dashboard');
+        }
+
+        return redirect()->route('front.courses.index');
     }
 }

@@ -189,6 +189,7 @@ return [
    'cancelled' => 'Cancelled',
    'course_progress' => 'Course Progress',
    'already_enrolled' => 'Already Enrolled',
+   'start_learning' => 'Start Learning',
 
    'lessons' => 'Lessons',
    'lessons_count' => 'Lessons Count',
@@ -214,6 +215,13 @@ return [
    'write_a_review' => 'Write a Review',
    'submit_review' => 'Submit Review',
    'no_reviews_yet' => 'No Reviews Yet',
+   'update_review' => 'Update Review',
+   'delete_review' => 'Delete Review',
+   'edit_your_review' => 'Edit Your Review',
+   'comment' => 'Comment',
+   'account_type' => 'Account Type',
+   'student' => 'Student',
+   
    
 ];
 

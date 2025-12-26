@@ -29,7 +29,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('front.index'));
+        $user = Auth::user();
+
+        // Redirect based on user type
+        if ($user->type === 'instructor') {
+            return redirect()->intended(route('instructor.dashboard'));
+        }
+
+        return redirect()->intended(route('front.courses.index'));
     }
 
     /**

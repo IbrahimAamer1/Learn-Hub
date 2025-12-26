@@ -21,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'type',
     ];
 
     /**
@@ -53,6 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Enrollment::class);
     }
 
+    // Student relationships (courses enrolled in)
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'enrollments')
@@ -65,10 +67,79 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Review::class);
     }
 
+    // Instructor relationships (courses created as instructor)
+    public function instructorCourses()
+    {
+        return $this->hasMany(Course::class, 'instructor_id');
+    }
+
     // helper methods
     public function isEnrolledIn($courseId)
     {
         return $this->enrollments()->where('course_id', $courseId)->exists();
+    }
+
+    /**
+     * Check if user is a student.
+     * 
+     * @return bool True if user type is 'student', false otherwise
+     */
+    public function isStudent()
+    {
+        return $this->type === 'student';
+    }
+
+    /**
+     * Check if user is an instructor.
+     * 
+     * @return bool True if user type is 'instructor', false otherwise
+     */
+    public function isInstructor()
+    {
+        return $this->type === 'instructor';
+    }
+
+    /////////////////////// INSTRUCTOR METHODS ///////////////////////
+
+    /**
+     * Get the total count of courses created by this instructor.
+     * 
+     * This method counts all courses (both published and draft) created by this instructor.
+     * 
+     * @return int Total number of courses
+     */
+    public function getTotalCourses()
+    {
+        return $this->instructorCourses()->count();
+    }
+
+    /**
+     * Get the total count of unique students enrolled in instructor's courses.
+     * 
+     * This method counts distinct users who are enrolled in at least one course
+     * created by this instructor.
+     * 
+     * @return int Total number of unique students
+     */
+    public function getTotalStudents()
+    {
+        return \App\Models\Enrollment::whereIn('course_id', $this->instructorCourses()->pluck('id'))
+            ->distinct('user_id')
+            ->count('user_id');
+    }
+
+    /**
+     * Get the total count of enrollments in instructor's courses.
+     * 
+     * This method counts all enrollment records (including duplicates if a student
+     * is enrolled in multiple courses) in courses created by this instructor.
+     * 
+     * @return int Total number of enrollments
+     */
+    public function getTotalEnrollments()
+    {
+        return \App\Models\Enrollment::whereIn('course_id', $this->instructorCourses()->pluck('id'))
+            ->count();
     }
 }
 

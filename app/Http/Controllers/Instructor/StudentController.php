@@ -23,7 +23,7 @@ class StudentController extends Controller
      */
     private function verifyCourseOwnership(Course $course)
     {
-        if ($course->instructor_id !== Auth::guard('admin')->id()) {
+        if ($course->instructor_id !== Auth::id()) {
             abort(403, 'You do not have permission to access this course');
         }
     }
@@ -43,7 +43,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $data = $this->getData($request->all());
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $courses = Course::where('instructor_id', $instructorId)->get();
         return view(self::DIRECTORY . ".index", \get_defined_vars())
             ->with('directory', self::DIRECTORY);
@@ -51,7 +51,7 @@ class StudentController extends Controller
 
     public function getData($data)
     {
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $perpage = $data['perpage'] ?? 10;
         $word = $data['word'] ?? null;
         $course_id = $data['course_id'] ?? null;

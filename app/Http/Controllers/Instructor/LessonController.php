@@ -24,7 +24,7 @@ class LessonController extends Controller
      */
     private function verifyOwnership(Lesson $lesson)
     {
-        if ($lesson->course->instructor_id !== Auth::guard('admin')->id()) {
+        if ($lesson->course->instructor_id !== Auth::id()) {
             abort(403, 'You do not have permission to access this lesson');
         }
     }
@@ -38,7 +38,7 @@ class LessonController extends Controller
      */
     private function verifyCourseOwnership(Course $course)
     {
-        if ($course->instructor_id !== Auth::guard('admin')->id()) {
+        if ($course->instructor_id !== Auth::id()) {
             abort(403, 'You do not have permission to access this course');
         }
     }
@@ -46,7 +46,7 @@ class LessonController extends Controller
     public function index(Request $request)
     {
         $data = $this->getData($request->all());
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $courses = Course::where('instructor_id', $instructorId)->get();
         return view(self::DIRECTORY . ".index", \get_defined_vars())
             ->with('directory', self::DIRECTORY);
@@ -54,7 +54,7 @@ class LessonController extends Controller
 
     public function getData($data)
     {
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $order = $data['order'] ?? 'lesson_order';
         $sort = $data['sort'] ?? 'asc';
         $perpage = $data['perpage'] ?? 10;
@@ -97,7 +97,7 @@ class LessonController extends Controller
 
     public function create(Request $request)
     {
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $courses = Course::where('instructor_id', $instructorId)->get();
         
         // Pre-select course if course_id is provided in query
@@ -140,7 +140,7 @@ class LessonController extends Controller
     public function edit(Lesson $lesson)
     {
         $this->verifyOwnership($lesson);
-        $instructorId = Auth::guard('admin')->id();
+        $instructorId = Auth::id();
         $courses = Course::where('instructor_id', $instructorId)->get();
         return view(self::DIRECTORY . ".edit", \get_defined_vars());
     }

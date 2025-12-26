@@ -96,7 +96,7 @@ route::prefix('back')->name('back.')->group(function () {
 });
 
 //instructor routes
-Route::prefix('instructor')->name('instructor.')->middleware(['admin', 'instructor'])->group(function () {
+Route::prefix('instructor')->name('instructor.')->middleware(['auth', 'instructor.user'])->group(function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
