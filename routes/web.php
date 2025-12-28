@@ -15,6 +15,7 @@ use App\Http\Controllers\Front\EnrollmentController as FrontEnrollmentController
 use App\Http\Controllers\Front\CourseController as FrontCourseController;
 use App\Http\Controllers\Front\LessonController as FrontLessonController;
 use App\Http\Controllers\Front\ReviewController as FrontReviewController;
+use App\Http\Controllers\Front\ProfileController as FrontProfileController;
 use App\Http\Controllers\Instructor\DashboardController;
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
 use App\Http\Controllers\Instructor\LessonController as InstructorLessonController;
@@ -30,9 +31,11 @@ use App\Http\Controllers\Instructor\StudentController;
 |
 */
 
+// Root route - show courses page directly
+Route::get('/', [FrontCourseController::class, 'index'])->name('home');
+
 //front routes
 route::prefix('front')->name('front.')->group(function () {
-    route::get('/', FrontHomeController::class)->middleware('auth')->name('index');
     route::view ('/login', 'front.auth.login')->name('login');
     route::view ('/register', 'front.auth.register')->name('register');
     route::view ('/forget-password', 'front.auth.forget-password')->name('forget-password');
@@ -57,6 +60,11 @@ route::prefix('front')->name('front.')->group(function () {
         route::post('courses/{course}/reviews', [FrontReviewController::class, 'store'])->name('reviews.store');
         route::put('courses/{course}/reviews/{review}', [FrontReviewController::class, 'update'])->name('reviews.update');
         route::delete('courses/{course}/reviews/{review}', [FrontReviewController::class, 'destroy'])->name('reviews.destroy');
+        
+        // Profile routes
+        route::get('profile', [FrontProfileController::class, 'edit'])->name('profile.edit');
+        route::put('profile', [FrontProfileController::class, 'update'])->name('profile.update');
+        route::put('profile/password', [FrontProfileController::class, 'updatePassword'])->name('profile.password.update');
     });
 });
 
@@ -111,3 +119,4 @@ Route::prefix('instructor')->name('instructor.')->middleware(['auth', 'instructo
     Route::get('students/{user}/courses/{course}', [StudentController::class, 'show'])->name('students.show');
 });
 
+ 

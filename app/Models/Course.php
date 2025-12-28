@@ -163,7 +163,7 @@ class Course extends Model
     // enrollment helper methods
     public function enrolledStudentsCount()
     {
-        return $this->enrollments()->where('status', 'enrolled')->count();
+        return $this->enrollments()->where('id', '!=', null)->count();
     }
 
     public function isEnrolledBy($userId)

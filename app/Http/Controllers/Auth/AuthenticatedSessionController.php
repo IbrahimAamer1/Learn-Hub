@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('instructor.dashboard'));
         }
 
-        return redirect()->intended(route('front.courses.index'));
+        return redirect()->intended(route('home'));
     }
 
     /**

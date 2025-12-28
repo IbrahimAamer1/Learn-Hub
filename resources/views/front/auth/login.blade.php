@@ -1,9 +1,9 @@
 
 @section('title')
-    front login page
+  login page
 @endsection
 @section('logo')
-    front
+    
 @endsection
 <!DOCTYPE html>
 <html
@@ -25,7 +25,7 @@
           <div class="card">
             <div class="card-body">
                 @include('front.partials.AuthLogo')
-              <h4 class="mb-2">Welcome to Sneat! 👋</h4>
+              <h4 class="mb-2">Welcome to learn Hub! 👋</h4>
               <p class="mb-4">Please sign-in to your account and start the adventure</p>
               <x-auth-session-status class="mb-4" :status="session('status')" />
               <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST">
@@ -72,6 +72,7 @@
                 </div>  
                 <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                  
                 </div>
               </form>
 

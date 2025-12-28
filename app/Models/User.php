@@ -8,9 +8,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\UpdatePasswordNotification;
-class User extends Authenticatable implements MustVerifyEmail
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -140,6 +144,44 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return \App\Models\Enrollment::whereIn('course_id', $this->instructorCourses()->pluck('id'))
             ->count();
+    }
+
+    /////////////////////// MEDIA LIBRARY METHODS ///////////////////////
+
+    /**
+     * Register media collections for the user
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/jpg', 'image/gif']);
+    }
+
+    /**
+     * Register media conversions (resize images automatically)
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100)
+            ->sharpen(10);
+
+        $this->addMediaConversion('preview')
+            ->width(400)
+            ->height(400);
+    }
+
+    /**
+     * Get user avatar URL
+     * 
+     * @return string
+     */
+    public function getAvatarUrlAttribute()
+    {
+        return $this->getFirstMediaUrl('avatar') 
+            ?: 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random';
     }
 }
 

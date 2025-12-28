@@ -221,6 +221,19 @@ return [
    'comment' => 'Comment',
    'account_type' => 'Account Type',
    'student' => 'Student',
+   'total_courses' => 'Total Courses',
+   'password_updated' => 'Password Updated',
+   'my_profile' => 'My Profile',
+   'update_profile' => 'Update Profile',
+   'update_password' => 'Update Password',
+   'delete_account' => 'Delete Account',
+   'logout' => 'Logout',
+   'login' => 'Login',
+   'register' => 'Register',
+   'remember_me' => 'Remember Me',
+   'forgot_password' => 'Forgot Password',
+   'profile_picture' => 'Profile Picture',
+   'avatar_hint' => 'Max size: 2MB. Supported formats: JPG, PNG, GIF',
    
    
 ];

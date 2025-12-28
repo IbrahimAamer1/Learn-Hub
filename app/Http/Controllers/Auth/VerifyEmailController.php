@@ -23,6 +23,6 @@ class VerifyEmailController extends Controller
             event(new Verified($request->user()));
         }
 
-        return to_route('front.index',['verified'=>1]);
+        return redirect()->route('front.index')->with('verified', true);
     }
 }

@@ -1,9 +1,8 @@
 
 @section('title')
-    front register page
+    register page
 @endsection
 @section('logo')
-    front
 @endsection
 <!DOCTYPE html>
 <html
@@ -27,7 +26,7 @@
                 @include('front.partials.AuthLogo')
              
               <h4 class="mb-2">Adventure starts here 🚀</h4>
-              <p class="mb-4">Make your app management easy and fun!</p>
+              <p class="mb-4">Make your learning easy and fun!</p>
 
               <form id="formAuthentication" class="mb-3" action="{{ route('register') }}" method="POST">
                 @csrf
