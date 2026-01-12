@@ -1,21 +1,3 @@
-# Authentication and Authorization System
-
-A comprehensive Laravel-based e-learning platform with multi-role authentication, course management, and enrollment system.
-
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Project Structure](#project-structure)
-- [User Roles](#user-roles)
-- [API Routes](#api-routes)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## 🎯 Overview
 
@@ -296,5 +278,6 @@ php artisan test --testsuite=Feature
 - Password hashing (bcrypt)
 - Email verification
 - Rate limiting on authentication routes
+
 
 
